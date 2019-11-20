@@ -1,0 +1,1 @@
+﻿# my-base-console-app
