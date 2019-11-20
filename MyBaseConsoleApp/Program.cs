@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MyBaseConsoleApp
@@ -30,6 +31,7 @@ namespace MyBaseConsoleApp
         private static ServiceProvider ConfigureServices()
         {
             IConfiguration configuration = new ConfigurationBuilder()
+                                            .SetBasePath(Directory.GetCurrentDirectory())
                                             .AddJsonFile("appsettings.json")
                                             .Build();
 
@@ -39,8 +41,8 @@ namespace MyBaseConsoleApp
             .AddConfiguration(configuration.GetSection("Logging")))
             .AddTransient<MyClass>();
 
-            //LogLevel minLevel = Enum.Parse<LogLevel>(configuration["Logging:Console:LogLevel:Default"].ToString());
-            //serviceCollection.Configure<LoggerFilterOptions>(options => options.MinLevel = minLevel);
+            LogLevel minLevel = Enum.Parse<LogLevel>(configuration["Logging:Console:LogLevel:Default"].ToString());
+            serviceCollection.Configure<LoggerFilterOptions>(options => options.MinLevel = minLevel);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             return serviceProvider;
